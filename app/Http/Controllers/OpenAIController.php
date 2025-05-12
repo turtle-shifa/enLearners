@@ -10,6 +10,7 @@ class OpenAIController extends Controller
 {
 public function askQuestion(Request $request)
 {
+    ini_set('max_execution_time', 180);
     if (!session('user_id')) {
         return redirect('/login')->withErrors(['auth' => 'You must be logged in to use the chatbot.']);
     }
@@ -22,7 +23,8 @@ public function askQuestion(Request $request)
         'Authorization' => 'Bearer ' . config('services.openrouter.api_key'),
         'HTTP-Referer' => config('app.url'),
         'X-Title' => 'Laravel OpenRouter Demo',
-    ])->post('https://openrouter.ai/api/v1/chat/completions', [
+    ])->timeout(180)
+        ->post('https://openrouter.ai/api/v1/chat/completions', [
         'model' => 'deepseek/deepseek-r1:free',
         'messages' => [
             ['role' => 'user', 'content' => $request->question]

@@ -18,7 +18,7 @@
     @include('external.nav') <!-- Include your external navigation bar -->
 
     <div class="container mt-5">
-        <h2 class="mb-4">Post Your Question</h2>
+        <h2 class="mb-4 fw-bold text-primary">Post Your Question</h2>
 
         <!-- Success Message -->
         @if (session('success'))
@@ -35,7 +35,14 @@
 
                     <p class="card-text">Asked by: {{ $question->user->name }}</p>
                     
-                    <a href="{{ route('questions.show', $question->id) }}" class="btn btn-primary">View Answers</a>
+                    <a href="{{ route('questions.show', $question->id) }}" class="btn btn-primary fw-bold">View Answers</a>
+                    @if(session('user_email') === 'super_admin@gmail.com')
+                        <form action="{{ route('questions.destroy', $question->id) }}" method="POST" class="d-inline ms-2">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger fw-bold">Delete</button>
+                        </form>
+                    @endif
                 </div>
             </div>
         @endforeach
@@ -44,11 +51,12 @@
         <form action="{{ url('/questions') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="question" class="form-label">Your Question</label>
+                <label for="question" class="form-label fw-bold">Your Question</label>
                 <textarea name="question" class="form-control" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Post Question</button>
+            <button type="submit" class="btn btn-primary fw-bold">Post Question</button>
         </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

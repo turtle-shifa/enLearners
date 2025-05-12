@@ -15,7 +15,7 @@
 <body>
 @include('external.nav')
 <div class="container mt-5">
-    <h2 class="mb-4">Update Your Information</h2>
+    <h2 class="mb-4 fw-bold text-primary">Update Your Information</h2>
 
     @if (session('success'))
             <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
@@ -34,7 +34,7 @@
         @csrf
 
         <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
+            <label for="name" class="form-label fw-bold">Name</label>
             <input 
                 type="text" 
                 class="form-control" 
@@ -48,7 +48,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="password" class="form-label">New Password (optional)</label>
+            <label for="password" class="form-label fw-bold">New Password (optional)</label>
             <input 
                 type="password" 
                 class="form-control" 
@@ -60,7 +60,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="password_confirmation" class="form-label">Confirm New Password</label>
+            <label for="password_confirmation" class="form-label fw-bold">Confirm New Password</label>
             <input 
                 type="password" 
                 class="form-control" 
@@ -68,7 +68,7 @@
                 name="password_confirmation">
         </div>
 
-        <button type="submit" class="btn btn-primary">Update Info</button>
+        <button type="submit" class="btn btn-primary fw-bold">Update Info</button>
     </form>
 </div>
 

@@ -12,6 +12,9 @@
         body {
             font-family: 'Montserrat', sans-serif;
         }
+        .card {
+            height: 100%; /* Ensures that all cards are the same height */
+        }
         </style>
     </head>
 <body>
@@ -36,9 +39,9 @@
             @if ($savedResources->isEmpty())
                 <p>You haven't saved any resources yet.</p>
             @else
-                <div class="row">
+                <div class="row row-cols-1 row-cols-md-3 g-4"> <!-- Updated grid layout for 3 cards per row -->
                     @foreach ($savedResources as $resource)
-                        <div class="col-md-4">
+                        <div class="col">
                             <div class="card mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $resource->title }}</h5>

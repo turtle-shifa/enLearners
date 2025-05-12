@@ -30,7 +30,7 @@
 
     <div class="container mt-5">
         <div class="card shadow p-4" style="max-width: 600px; margin: auto;">
-            <h3 class="text-center mb-4" style="color: #0056D2;">Upload New Resource</h3>
+            <h3 class="text-center mb-4 fw-bold" style="color: #0056D2;">Upload New Resource</h3>
 
             <form action="{{ url('/resources') }}" method="POST" enctype="multipart/form-data">
                 @csrf

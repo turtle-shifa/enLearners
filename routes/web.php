@@ -6,6 +6,8 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\QuestionController; 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,3 +110,31 @@ Route::post('/update-info', [UserController::class, 'updateInfo'])->name('update
 
 Route::post('/answers/{id}/upvote', [QuestionController::class, 'upvote']);
 Route::post('/answers/{id}/downvote', [QuestionController::class, 'downvote']);
+
+
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
+Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
+Route::get('/books/{workId}', [BookController::class, 'show'])->name('books.show');
+
+Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+Route::delete('/answers/{id}', [QuestionController::class, 'destroyAnswer'])->name('answers.destroy');
+
+
+// Route::post('/send-message', [ChatController::class, 'sendMessage']);
+// Route::post('/admin-respond', [ChatController::class, 'adminRespond']);
+// Route::get('/messages', [ChatController::class, 'fetchMessages']);
+
+// Route::get('/admin/chat-response', [ChatController::class, 'adminChatResponse'])->middleware('admin');
+// Route::get('/admin/messages', [ChatController::class, 'getMessagesWithUser'])->middleware('admin');
+
+Route::get('/about',function(){
+    return view('about');
+});
+
+Route::get('/terms',function(){
+    return view('terms');
+});
+
+Route::get('/privacy',function(){
+    return view('privacy');
+});

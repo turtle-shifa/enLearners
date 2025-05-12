@@ -9,7 +9,9 @@ class Answer extends Model
 {
     use HasFactory;
     protected $fillable = ['question_id', 'user_id', 'answer', 'upvotes', 'downvotes'];
-
+    protected $casts = [
+        'images' => 'array',
+    ];
     public function question()
 {
     return $this->belongsTo(Question::class);
@@ -44,4 +46,8 @@ public function user()
         $this->decrement('downvotes');
     }
 
+    public function votes()
+    {
+        return $this->hasMany(AnswerVote::class);
+    }
 }

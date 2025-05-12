@@ -26,14 +26,30 @@
             </div>
         </div>
 
-        <h3>Answers:</h3>
+        <h3 class="mb-4 fw-bold text-primary">Answers:</h3>
 
         <!-- Display all answers -->
         @foreach($question->answers as $answer)
             <div class="card mb-3">
                 <div class="card-body">
-                    <p class="card-text">{{ $answer->answer }}</p>
-                    <p class="card-text"><small class="text-muted">Answered by: {{ $answer->user->name }}</small></p>
+                    <p class="card-text fw-normal">{{ $answer->answer }}</p>
+
+                    @if ($answer->images)
+                        <div class="mt-2">
+                            @foreach ($answer->images as $image)
+                                <img src="{{ asset('storage/' . $image) }}" class="img-thumbnail me-2 mb-2" style="max-height: 150px;">
+                            @endforeach
+                        </div>
+                    @endif
+                    <p class="card-text"><small class="text-muted fw-normal">Answered by: {{ $answer->user->name }}</small></p>
+                    <!--score-->
+                    <p class="text-success fw-bold">
+                        Score: {{
+                            ($answer->upvotes + $answer->downvotes) > 0
+                            ? round(($answer->upvotes / ($answer->upvotes + $answer->downvotes)) * log($answer->upvotes + $answer->downvotes + 1), 2)
+                            : 0
+                        }}
+                    </p>
 
                     <div class="d-flex">
                         <!-- Upvote button -->
@@ -51,20 +67,33 @@
                                 <i class="bi bi-arrow-down-circle"></i> Downvote ({{ $answer->downvotes }})
                             </button>
                         </form>
+                        @if(session('user_email') === 'super_admin@gmail.com')
+                            <form action="{{ route('answers.destroy', $answer->id) }}" method="POST" class="ms-2">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete Answer</button>
+                            </form>
+                        @endif                    
                     </div>
                 </div>
             </div>
         @endforeach
 
         <!-- Post New Answer -->
-        <form action="{{ url('/questions/' . $question->id . '/answer') }}" method="POST">
+        <form action="{{ url('/questions/' . $question->id . '/answer') }}" method="POST" enctype="multipart/form-data">
+
             @csrf
             <div class="mb-3">
-                <label for="answer" class="form-label">Your Answer</label>
+                <label for="answer" class="form-label fw-normal">Your Answer</label>
                 <textarea name="answer" class="form-control" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-success">Submit Answer</button>
+            <div class="mb-3">
+                <label for="images" class="form-label">Upload Images (max 5):</label>
+                <input type="file" name="images[]" class="form-control" multiple accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-success fw-bold">Submit Answer</button>
         </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

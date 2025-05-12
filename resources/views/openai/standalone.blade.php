@@ -77,10 +77,10 @@
                     <form method="POST" action="{{ route('openai.ask') }}">
                         @csrf
                         <div class="mb-3">
-                            <label for="question" class="form-label fw-semibold">Your Question:</label>
-                            <textarea name="question" id="question" class="form-control" rows="4" placeholder="Ask something..." required>{{ old('question') }}</textarea>
+                            <label for="question" class="form-label fw-semibold">Ask Your Query:</label>
+                            <textarea name="question" id="question" class="form-control" rows="4" placeholder="Ask anything related to your studies..." required>{{ old('question') }}</textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary fw-semibold">Submit</button>
+                        <button type="submit" class="btn btn-primary fw-semibold">Ask</button>
                     </form>
                 @endif
 

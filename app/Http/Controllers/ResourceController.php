@@ -7,7 +7,9 @@ use App\Models\Resource;
 use App\Models\ResourceRequest;
 use App\Models\Topic;
 use App\Models\User;
+use App\Models\ResourceVote;
 use Illuminate\Support\Facades\Auth;
+
 
 class ResourceController extends Controller
 {
@@ -72,17 +74,71 @@ class ResourceController extends Controller
         
     }
 
-    public function upvote(Request $request){
-        Resource::where('id', $request->id)->increment('upvote');
+    public function upvote($id)
+{
+    if (!session()->has('user_id')) {
+        return redirect('/login')->with('error', 'You must be logged in to upvote.');
+    }
+    $userId = session('user_id');
+    $resource = Resource::findOrFail($id);
 
-        return redirect()->back();
+    $existingVote = ResourceVote::where('user_id', $userId)
+        ->where('resource_id', $id)
+        ->first();
+
+    if ($existingVote) {
+        if ($existingVote->vote_type == 'upvote') {
+            return back()->with('message', 'You have already upvoted this resource.');
+        }
+
+        // Switch from downvote to upvote
+        $existingVote->update(['vote_type' => 'upvote']);
+        $resource->increment('upvote');
+        $resource->decrement('downvote');
+    } else {
+        ResourceVote::create([
+            'user_id' => $userId,
+            'resource_id' => $id,
+            'vote_type' => 'upvote'
+        ]);
+        $resource->increment('upvote');
     }
 
-    public function downvote(Request $request){
-        Resource::where('id', $request->id)->decrement('downvote');
+    return back();
+}
 
-        return redirect()->back();
+    public function downvote($id)
+{
+    if (!session()->has('user_id')) {
+        return redirect('/login')->with('error', 'You must be logged in to upvote.');
     }
+    $userId =session('user_id');
+    $resource = Resource::findOrFail($id);
+
+    $existingVote = ResourceVote::where('user_id', $userId)
+        ->where('resource_id', $id)
+        ->first();
+
+    if ($existingVote) {
+        if ($existingVote->vote_type == 'downvote') {
+            return back()->with('message', 'You have already downvoted this resource.');
+        }
+
+        // Switch from upvote to downvote
+        $existingVote->update(['vote_type' => 'downvote']);
+        $resource->increment('downvote');
+        $resource->decrement('upvote');
+    } else {
+        ResourceVote::create([
+            'user_id' => $userId,
+            'resource_id' => $id,
+            'vote_type' => 'downvote'
+        ]);
+        $resource->increment('downvote');
+    }
+
+    return back();
+}
 
 
     public function pendingRequests()
@@ -157,7 +213,9 @@ class ResourceController extends Controller
 
     public function showResources()
     {
-        $resources = Resource::all();  // Fetch all resources from the database
+        $resources = Resource::orderByDesc('upvote') 
+                        ->orderBy('downvote', 'asc')
+                        ->get();
         return view('resources', compact('resources'));  // Return the view with resources
     }
 
